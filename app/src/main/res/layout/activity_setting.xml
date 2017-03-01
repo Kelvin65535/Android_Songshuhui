@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.kelvin.android_songshuhui.settingActivity"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:text="选择要在首页显示的专题："
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_title"
+        android:textSize="18sp"
+        android:layout_marginBottom="5dp" />
+
+    <CheckBox
+        android:text="健康"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/health"
+        android:textSize="24sp"
+        android:layout_below="@+id/textView_title"
+        android:layout_alignStart="@+id/checkBox_what_if" />
+
+    <CheckBox
+        android:text="化学"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_ch"
+        android:textSize="24sp"
+        android:layout_below="@+id/health"
+        android:layout_alignStart="@+id/health" />
+
+    <CheckBox
+        android:text="航天"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_aerospace"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_ch"
+        android:layout_alignStart="@+id/checkBox_ch" />
+
+    <CheckBox
+        android:text="物理"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_physics"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_aerospace"
+        android:layout_alignStart="@+id/checkBox_aerospace" />
+
+    <CheckBox
+        android:text="医学"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_medi"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_math"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="天文"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_astro"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_medi"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="心理"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_psychology"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_astro"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="环境"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_environment"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_psychology"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="生物"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_biology"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_environment"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="xkcd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_xkcd"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_biology"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="计算机科学"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_cs"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_physics"
+        android:layout_alignStart="@+id/checkBox_physics" />
+
+    <CheckBox
+        android:text="译文"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_yiwen"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_cs"
+        android:layout_alignStart="@+id/checkBox_cs" />
+
+    <CheckBox
+        android:text="what if"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_what_if"
+        android:textSize="24sp"
+        android:layout_below="@+id/checkBox_yiwen"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="该设置将在重启程序后生效"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_bottom"
+        android:layout_below="@id/checkBox_xkcd"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <CheckBox
+        android:text="数学"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_math"
+        android:textSize="24sp"
+        android:layout_below="@+id/textView_title"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>
