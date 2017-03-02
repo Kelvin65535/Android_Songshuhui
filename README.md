@@ -14,6 +14,9 @@
 
 ![](docs/main.png)
 
+文章
+![](docs/article.png)
+
 设置页面
 
 ![](docs/settings.png)
