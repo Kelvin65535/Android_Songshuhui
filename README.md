@@ -10,6 +10,8 @@
 
 科学松鼠会主页：http://songshuhui.net
 
+该应用已收录在酷安网：http://www.coolapk.com/apk/com.kelvin.android_songshuhui
+
 主界面
 
 ![](docs/main.png)
