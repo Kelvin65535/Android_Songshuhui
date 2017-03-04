@@ -46,6 +46,10 @@ public class mainActivityListView extends ListView {
     private ArrayList<mainActivityListViewItem> titleList = new ArrayList<>();
     private mainActivityListViewAdapter adapter;
 
+    //在更新list元素（初始化、下拉刷新）的时候所用的临时list，将更新资源放在该list，等加载完毕后再覆盖回titleList
+    //防止在刷新UI前直接对titleList更新元素，导致调用元素位置时产生错误
+    private ArrayList<mainActivityListViewItem> newList = new ArrayList<>();
+
     private onListLoadingListener listener;
 
     //存储当前页面的“首页”地址
@@ -56,6 +60,8 @@ public class mainActivityListView extends ListView {
     private static int currentNextPageIndex;
     //判断当前是否处于“加载更多”的状态
     private boolean isLoadingMore = false;
+    //判断当前是否处于"下拉刷新"状态
+    private boolean isRefresh = false;
 
     //用于处理在联网更新内容时，getListElementsByURL()子线程发送的信息，若接收到OK信号，即刷新视图
     private Handler handler = new Handler(){
@@ -63,11 +69,30 @@ public class mainActivityListView extends ListView {
             switch (msg.what){
                 case 1:
                     //列表初始化完成
+                    for (int i = 0; i < newList.size(); i++){
+                        if (titleList.size() < i){
+                            titleList.add(newList.get(i));
+                        }else{
+                            titleList.set(i, newList.get(i));
+                        }
+                    }
+                    isRefresh = false;
                     //若联网更新List内的数据已经完成，提交更改，写入UI中
                     commitListItemChange();
                     break;
                 case 2:
                     //列表下拉刷新完成
+                    //titleList.clear();
+                    //titleList.addAll(newList);
+                    //
+                    for (int i = 0; i < newList.size(); i++){
+                        if (titleList.size() <= i){
+                            titleList.add(newList.get(i));
+                        }else{
+                            titleList.set(i, newList.get(i));
+                        }
+                    }
+                    isRefresh = false;
                     commitListItemChange();
                     listener.onLoadingFinished();
                     break;
@@ -155,8 +180,8 @@ public class mainActivityListView extends ListView {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 //判断List是否为停止状态、是否滑动到最后一个元素、是否正在加载数据
                 if (scrollState == SCROLL_STATE_IDLE && (view.getLastVisiblePosition() == (view.getCount()-1))){
-                    //判断当前是否加载数据
-                    if (!isLoadingMore){
+                    //判断当前是否加载数据或正在刷新列表
+                    if (!isLoadingMore && !isRefresh){
                         //调用加载数据的方法
                         pullUpLoadingList();
                     }
@@ -175,6 +200,7 @@ public class mainActivityListView extends ListView {
      * 可在Activity内新建当前对象后调用该方法，用于初始化列表
      */
     public void getListElementsByURL(String URL, final String situation){
+
         //将当前URL设置为首页
         final String urlString = URL;
         new Thread(new Runnable() {
@@ -249,7 +275,7 @@ public class mainActivityListView extends ListView {
                             }
 
                             item = new mainActivityListViewItem(title, imageSite, website, bitmap, tags);
-                            titleList.add(item);
+                            newList.add(item);
                         }
                     }
 
@@ -286,7 +312,8 @@ public class mainActivityListView extends ListView {
      * 该方法用于在下拉刷新时调用，重新从首页获取目录信息并更新列表
      */
     public void refreshUpdateList(onListLoadingListener listener, String firstPageURL){
-        titleList.clear();
+        newList.clear();//清空用于存放更新列表元素的list
+        isRefresh = true;//设置正在更新列表的状态标记
         this.listener = listener;
         FirstPageURL = firstPageURL;//保存首页
         getListElementsByURL(firstPageURL, "refresh");
