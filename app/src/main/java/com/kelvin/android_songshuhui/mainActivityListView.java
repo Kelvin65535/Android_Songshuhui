@@ -77,6 +77,13 @@ public class mainActivityListView extends ListView {
                     currentNextPageIndex++;
                     isLoadingMore = false;
                     commitListItemChange();
+                    break;
+                case 4:
+                    //列表上拉加载错误
+                    //设置更新状态为false
+                    isLoadingMore = false;
+                    commitListItemChange();
+                    break;
             }
         }
     };
@@ -96,7 +103,6 @@ public class mainActivityListView extends ListView {
     /**
      * 构造方法
      * @param context 调用这个构造方法的上下文，该上下文即为包含这个ListView的Activity的上下文，可用于点击Item时Intent的上下文传参使用
-     * @param attrs
      */
     public mainActivityListView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -107,8 +113,6 @@ public class mainActivityListView extends ListView {
     /**
      * 构造方法
      * @param context 调用这个构造方法的上下文，该上下文即为包含这个ListView的Activity的上下文，可用于点击Item时Intent的上下文传参使用
-     * @param attrs
-     * @param defStyleAttr
      */
     public mainActivityListView(Context context, AttributeSet attrs, int defStyleAttr){
         super(context, attrs, defStyleAttr);
@@ -260,8 +264,9 @@ public class mainActivityListView extends ListView {
                     else if (situation == "refresh"){
                         handler.sendEmptyMessage(2);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                handler.sendEmptyMessage(2);
             }
             }
         }).start();
@@ -391,12 +396,9 @@ public class mainActivityListView extends ListView {
 
                         //刷新视图
                         handler.sendEmptyMessage(3);
-                    } catch (ProtocolException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        handler.sendEmptyMessage(4);
                     }
 
                 }
