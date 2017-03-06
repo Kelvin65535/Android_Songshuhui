@@ -45,6 +45,8 @@ public class mainActivityListViewItem {
         return title;
     }
 
+    public String getImageWebSite() {return imageWebSiteString;}
+
     public String getWebsite(){
         return website;
     }
@@ -57,56 +59,4 @@ public class mainActivityListViewItem {
         return tags;
     }
 
-    /**
-     * 异步加载图片
-     * @param imageView
-     * @param imageCallBack 加载完成后的回调接口
-     */
-    public void asyncLoadBitmap(final ImageView imageView, final ImageCallBack imageCallBack){
-        final Handler handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 0) {
-                    imageCallBack.imageLoadSuccess(imageView, (Bitmap) msg.obj);
-                } else if (msg.what == 1) {
-                    imageCallBack.imageLoadFailed();
-                }
-            }
-        };
-
-        //开启线程加载图片
-        new Thread(new Runnable() {
-            Bitmap bitmap;
-            @Override
-            public void run() {
-                try {
-                    java.net.URL url = new URL(imageWebSiteString);
-
-                    HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-                    conn.setConnectTimeout(5000);
-                    conn.setRequestMethod("GET");
-                    if(conn.getResponseCode() == 200) {
-                        InputStream inputStream = conn.getInputStream();
-                        bitmap = BitmapFactory.decodeStream(inputStream);
-                        inputStream.close();
-
-                        Message msg = Message.obtain();
-                        msg.obj = bitmap;
-                        msg.what = 0;
-                        handler.sendMessage(msg);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    handler.sendEmptyMessage(1);
-                }
-            }
-        });
-    }
-
-    public interface ImageCallBack {
-        public void imageLoadSuccess(ImageView imageView, Bitmap bitmap);
-        public void imageLoadFailed();
-    }
 }

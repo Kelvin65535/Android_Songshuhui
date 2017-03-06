@@ -159,7 +159,7 @@ public class mainActivityListView extends ListView {
      */
     public void init(final Context context){
         //设置当前ListView的适配器
-        adapter = new mainActivityListViewAdapter(context, R.layout.main_listview_item, titleList);
+        adapter = new mainActivityListViewAdapter(context, R.layout.main_listview_item, titleList, this);
         this.setAdapter(adapter);
 
         //初始化当前listview获得数据的主页的下一页page编号为2
