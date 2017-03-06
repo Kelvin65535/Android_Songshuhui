@@ -1,6 +1,7 @@
 package com.kelvin.android_songshuhui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +29,9 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         mainActivityListViewItem item = getItem(position);
+        /*
         View view = LayoutInflater.from(getContext()).inflate(resourceID, null);
         ImageView imageView = (ImageView)view.findViewById(R.id.title_image);//图片
         TextView titleName = (TextView)view.findViewById(R.id.title_name);//名称
@@ -40,8 +43,47 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
 
         //设置imageView里的图片的显示方式为将图片按比例扩大/缩小到View的宽度，居中显示
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        */
+        final ViewHolder viewHolder;
+        if (convertView == null){
+            viewHolder = new ViewHolder();
+            convertView = LayoutInflater.from(getContext()).inflate(resourceID, null);
+            viewHolder.imageView = (ImageView)convertView.findViewById(R.id.title_image);//图片
+            viewHolder.titleName = (TextView)convertView.findViewById(R.id.title_name);//名称
+            viewHolder.titleTag = (TextView)convertView.findViewById(R.id.title_tags);//标签
 
+            convertView.setTag(viewHolder);
+        }else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
-        return view;
+        //viewHolder.imageView.setImageBitmap(item.getImageView());
+        viewHolder.imageView.setBackgroundResource(R.drawable.titleimage_default);
+        viewHolder.titleName.setText(item.getTitle());
+        viewHolder.titleTag.setText(item.getTags());
+
+        //异步加载图片
+        item.asyncLoadBitmap(viewHolder.imageView, new mainActivityListViewItem.ImageCallBack() {
+            @Override
+            public void imageLoadSuccess(ImageView imageView, Bitmap bitmap) {
+                imageView.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void imageLoadFailed() {
+
+            }
+        });
+
+        //设置imageView里的图片的显示方式为将图片按比例扩大/缩小到View的宽度，居中显示
+        viewHolder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        return convertView;
+    }
+
+    private final class ViewHolder {
+        private ImageView imageView;
+        private TextView titleName;
+        private TextView titleTag;
     }
 }

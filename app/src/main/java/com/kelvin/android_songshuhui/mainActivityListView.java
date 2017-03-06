@@ -42,6 +42,9 @@ public class mainActivityListView extends ListView {
      *******************************************
      */
 
+    //保存上下文
+    private Context context;
+
     ///表示菜单项的list
     private ArrayList<mainActivityListViewItem> titleList = new ArrayList<>();
     private mainActivityListViewAdapter adapter;
@@ -121,7 +124,7 @@ public class mainActivityListView extends ListView {
      */
     public mainActivityListView(Context context) {
         super(context);
-
+        this.context = context;
         init(context);
     }
 
@@ -131,7 +134,7 @@ public class mainActivityListView extends ListView {
      */
     public mainActivityListView(Context context, AttributeSet attrs){
         super(context, attrs);
-
+        this.context = context;
         init(context);
     }
 
@@ -141,7 +144,7 @@ public class mainActivityListView extends ListView {
      */
     public mainActivityListView(Context context, AttributeSet attrs, int defStyleAttr){
         super(context, attrs, defStyleAttr);
-
+        this.context = context;
         init(context);
     }
 
@@ -263,7 +266,9 @@ public class mainActivityListView extends ListView {
 
 
                             //获取图片的bitmap
+
                             Bitmap bitmap = null;
+                            /*
                             java.net.URL url = new URL(imageSite);
 
                             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -273,8 +278,8 @@ public class mainActivityListView extends ListView {
                                 InputStream inputStream = conn.getInputStream();
                                 bitmap = BitmapFactory.decodeStream(inputStream);
                             }
-
-                            item = new mainActivityListViewItem(title, imageSite, website, bitmap, tags);
+                            */
+                            item = new mainActivityListViewItem(context, title, imageSite, website, bitmap, tags);
                             newList.add(item);
                         }
                     }
@@ -398,6 +403,7 @@ public class mainActivityListView extends ListView {
 
                                 //获取图片的bitmap
                                 Bitmap bitmap = null;
+                                /*
                                 java.net.URL url = new URL(imageSite);
 
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -407,8 +413,8 @@ public class mainActivityListView extends ListView {
                                     InputStream inputStream = conn.getInputStream();
                                     bitmap = BitmapFactory.decodeStream(inputStream);
                                 }
-
-                                item = new mainActivityListViewItem(title, imageSite, website, bitmap, tags);
+                                */
+                                item = new mainActivityListViewItem(context, title, imageSite, website, bitmap, tags);
                                 tempList.add(item);
                             }
                         }
