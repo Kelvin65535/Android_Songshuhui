@@ -71,24 +71,17 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        //启动线程，异步加载图片
-        try {
-            Bitmap bitmap = getBitmap(dataArray.get(index).getImageWebSite(), index);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
         //图片URL
         imageURL = item.getImageWebSite();
         viewHolder.imageView.setTag(imageURL);//设置imageview标签
-        if (bitmap == null){
-            viewHolder.imageView.setImageResource(R.drawable.titleimage_default);//加载预设图片
-        }else {
-            if (viewHolder.imageView.getTag() != null && viewHolder.imageView.getTag().equals(imageURL)){
-                viewHolder.imageView.setImageBitmap(bitmap);
-                viewHolder.imageView.setTag("");
-            }
-        }
 
+        //启动线程，异步加载图片
+        try {
+            Bitmap bitmap = getBitmap(item.getImageWebSite(), index);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         viewHolder.titleName.setText(item.getTitle());
         viewHolder.titleTag.setText(item.getTags());
@@ -132,13 +125,21 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
         return bitmap;
     }
 
-    //图片加载完毕后的回调方法
     Handler handler = new Handler() {
         public void handleMessage(Message message) {
             ImageView iv = (ImageView) listView.findViewWithTag(imageURL);
-            if(iv!=null){
-                iv.setImageBitmap((Bitmap) message.obj);
+            Bitmap bitmap = (Bitmap)message.obj;
+            if (iv != null){
+                if(iv.getTag() != null && iv.getTag().equals(imageURL)){
+                    if (bitmap == null){
+                        iv.setImageResource(R.drawable.titleimage_default);//加载预设图片
+                    }else {
+                        iv.setImageBitmap(bitmap);
+                        iv.setTag(null);
+                    }
+                }
             }
+
         }
     };
 
