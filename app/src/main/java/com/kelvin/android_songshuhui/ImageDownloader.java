@@ -59,7 +59,7 @@ public class ImageDownloader {
                     handler.sendEmptyMessage(1);
                 }
             }
-        });
+        }).start();
     }
 
     public interface ImageCallBack {

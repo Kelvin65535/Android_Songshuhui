@@ -31,6 +31,10 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
     private int resourceID;
 
     ImageDownloader imageDownloader;
+    private List<mainActivityListViewItem> dataArray;
+    private int index = 0;//存放item的索引
+    private Bitmap bitmap = null;//从URL加载的图片bitmap
+    private String imageURL;//图片URL
 
     /**
      *
@@ -43,6 +47,7 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
         super(context, textViewResourceID, lists);
         resourceID = textViewResourceID;
         this.listView = listView;
+        this.dataArray = lists;
     }
 
 
@@ -51,6 +56,7 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
     public View getView(int position, View convertView, ViewGroup parent) {
 
         mainActivityListViewItem item = getItem(position);
+        index = position;
 
         ViewHolder viewHolder;
         if (convertView == null){
@@ -65,36 +71,76 @@ public class mainActivityListViewAdapter extends ArrayAdapter<mainActivityListVi
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final String imageURL = item.getImageWebSite();
-        viewHolder.imageView.setTag(imageURL);
+        //启动线程，异步加载图片
+        try {
+            Bitmap bitmap = getBitmap(dataArray.get(index).getImageWebSite(), index);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //图片URL
+        imageURL = item.getImageWebSite();
+        viewHolder.imageView.setTag(imageURL);//设置imageview标签
+        if (bitmap == null){
+            viewHolder.imageView.setImageResource(R.drawable.titleimage_default);//加载预设图片
+        }else {
+            if (viewHolder.imageView.getTag() != null && viewHolder.imageView.getTag().equals(imageURL)){
+                viewHolder.imageView.setImageBitmap(bitmap);
+                viewHolder.imageView.setTag("");
+            }
+        }
 
-        viewHolder.imageView.setBackgroundResource(R.drawable.titleimage_default);//加载预设图片
+
         viewHolder.titleName.setText(item.getTitle());
         viewHolder.titleTag.setText(item.getTags());
-
-        //异步加载图片
-        if (imageDownloader != null){
-            imageDownloader.asyncLoadBitmap(imageURL, new ImageDownloader.ImageCallBack() {
-                @Override
-                public void imageLoadSuccess(Bitmap bitmap) {
-                    ImageView imageView = (ImageView)listView.findViewWithTag(imageURL);
-                    if (imageView != null){
-                        imageView.setImageBitmap(bitmap);
-                        imageView.setTag("");
-                    }
-                }
-                @Override
-                public void imageLoadFailed() {
-
-                }
-            });
-        }
 
         //设置imageView里的图片的显示方式为将图片按比例扩大/缩小到View的宽度，居中显示
         viewHolder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
         return convertView;
     }
+
+    /**
+     * 使用线程加载图片
+     * @param urlString 图片URL
+     * @param index 要加载图片的item的索引
+     * @return bitmap
+     */
+    public Bitmap getBitmap(final String urlString, final int index){
+        //开启线程加载图片
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    java.net.URL url = new URL(urlString);
+                    HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                    conn.setConnectTimeout(5000);
+                    conn.setRequestMethod("GET");
+                    if(conn.getResponseCode() == 200) {
+                        InputStream inputStream = conn.getInputStream();
+                        bitmap = BitmapFactory.decodeStream(inputStream);
+                    }
+                    Message msg = handler.obtainMessage(0, bitmap);
+                    msg.what = index;
+                    handler.sendMessage(msg);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        return bitmap;
+    }
+
+    //图片加载完毕后的回调方法
+    Handler handler = new Handler() {
+        public void handleMessage(Message message) {
+            ImageView iv = (ImageView) listView.findViewWithTag(imageURL);
+            if(iv!=null){
+                iv.setImageBitmap((Bitmap) message.obj);
+            }
+        }
+    };
 
     private class ViewHolder {
         private ImageView imageView;
